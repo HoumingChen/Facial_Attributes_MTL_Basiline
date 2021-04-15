@@ -33,12 +33,13 @@ print(opt)
 
 os.environ["CUDA_VISIBLE_DEVICES"] = opt.gpu
 
-trainset = CelebA('./data/list_eval_partition.txt', './data/list_attr_celeba.txt', '0',
-                  './data/img_align_celeba/', transform_train)
+trainset = CelebA('/content/list_eval_partition.csv', '/content/list_attr_celeba.csv', '0',
+                  '/content/img_align_celeba/img_align_celeba/', transform_train)
+print(len(trainset))
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.batchSize, shuffle=True, num_workers=opt.workers)
 
-valset = CelebA('./data/list_eval_partition.txt', './data/list_attr_celeba.txt', '1',
-                  './data/img_align_celeba/', transform_val)
+valset = CelebA('/content/list_eval_partition.csv', '/content/list_attr_celeba.csv', '1',
+                  '/content/img_align_celeba/img_align_celeba/', transform_val)
 valloader = torch.utils.data.DataLoader(valset, batch_size=opt.batchSize, shuffle=True, num_workers=opt.workers)
 
 
