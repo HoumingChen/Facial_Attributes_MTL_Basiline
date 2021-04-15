@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
+import torchvision.models as models
 from dataset.CelebA import CelebA
-from model.resnet import resnet50
 import os
 from torch.autograd import Variable
 import argparse
@@ -24,8 +24,8 @@ transform_val = transforms.Compose([
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--workers', type=int, default=2)
-parser.add_argument('--batchSize', type=int, default=32)
-parser.add_argument('--nepoch', type=int, default=10)
+parser.add_argument('--batchSize', type=int, default=128)
+parser.add_argument('--nepoch', type=int, default=1)
 parser.add_argument('--lr', type=float, default=2e-6)
 parser.add_argument('--gpu', type=str, default='7', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
 opt = parser.parse_args()
@@ -44,7 +44,7 @@ valloader = torch.utils.data.DataLoader(valset, batch_size=opt.batchSize, shuffl
 
 
 #model = resnet50(pretrained=True, num_classes=40)
-model=resnet50(pretrained=True)
+model=models.resnet50(pretrained=True)
 model.fc=nn.Linear(2048,40)
 model.cuda()
 criterion = nn.BCEWithLogitsLoss(reduce=True)
@@ -91,4 +91,4 @@ def test(epoch):
 for epoch in range(0, opt.nepoch):
     train(epoch)
     test(epoch)
-torch.save(model.state_dict(), 'ckp/model_naive.pth')
+torch.save(model.state_dict(), 'model_naive.pth')
