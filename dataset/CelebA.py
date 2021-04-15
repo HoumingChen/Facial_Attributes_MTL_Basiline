@@ -13,10 +13,11 @@ def pil_loader(path):
 def make_img(part_dir, partition):
     img = []
     with open(part_dir) as f:
+        f.readline()
         lines = f.readlines()
         for line in lines:
-            pic_dir, num = line.split()
-            if num == partition: 
+            pic_dir, num = line.split(',')
+            if int(num) == int(partition): 
                 img.append(pic_dir)
     return img
 
@@ -29,7 +30,7 @@ class CelebA(data.Dataset):
             lines = f.readlines()
             id = 0
             for line in lines:
-                vals = line.split()
+                vals = line.split(',')
                 id += 1
                 for j in range(40):
                     self.attr[id, j] = int(vals[j+1])
