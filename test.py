@@ -1,8 +1,7 @@
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
-from dataset.CelebA import CelebA
-from model.resnet import resnet50
+from CelebA import CelebA
 import os
 from torch.autograd import Variable
 import argparse
