@@ -26,7 +26,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--workers', type=int, default=2)
 parser.add_argument('--batchSize', type=int, default=32)
 parser.add_argument('--nepoch', type=int, default=10)
-parser.add_argument('--lr', type=float, default=0.001)
+parser.add_argument('--lr', type=float, default=2e-6)
 parser.add_argument('--gpu', type=str, default='7', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
 opt = parser.parse_args()
 print(opt)
@@ -35,7 +35,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = opt.gpu
 
 trainset = CelebA('/content/list_eval_partition.csv', '/content/list_attr_celeba.csv', '0',
                   '/content/img_align_celeba/img_align_celeba/', transform_train)
-print(len(trainset))
+
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.batchSize, shuffle=True, num_workers=opt.workers)
 
 valset = CelebA('/content/list_eval_partition.csv', '/content/list_attr_celeba.csv', '1',
@@ -47,14 +47,13 @@ valloader = torch.utils.data.DataLoader(valset, batch_size=opt.batchSize, shuffl
 model=resnet50(pretrained=True)
 model.fc=nn.Linear(2048,40)
 model.cuda()
-criterion = nn.MSELoss(reduce=True)
-optimizer = optim.SGD(model.parameters(), lr=opt.lr, momentum=0.9, weight_decay=5e-4)
-scheduler = StepLR(optimizer, step_size=3)
+criterion = nn.BCEWithLogitsLoss(reduce=True)
+optimizer = optim.Adam(model.parameters(), lr=opt.lr)
+scheduler = StepLR(optimizer, step_size=2, gamma=0.5)
 
 
 def train(epoch):
     print('\nTrain epoch: %d' % epoch)
-    scheduler.step()
     model.train()
     for batch_idx, (images, attrs) in enumerate(trainloader):
         images = Variable(images.cuda())
@@ -66,6 +65,7 @@ def train(epoch):
         optimizer.step()
         if batch_idx%100==0:
             print('[%d/%d][%d/%d] loss: %.4f' % (epoch, opt.nepoch, batch_idx, len(trainloader), loss.mean()))
+    scheduler.step()
 
 
 
