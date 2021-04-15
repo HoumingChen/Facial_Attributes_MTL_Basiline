@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
+import torchvision.models as models
 from CelebA import CelebA
 import os
 from torch.autograd import Variable
@@ -14,12 +15,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--workers', type=int, default=2)
 parser.add_argument('--batchSize', type=int, default=32)
 parser.add_argument('--gpu', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
-parser.add_argument('--model', type=str,default='ckp/model_naive.pth')
+parser.add_argument('--model', type=str,default='model_naive.pth')
 opt = parser.parse_args()
 print(opt)
 
 os.environ["CUDA_VISIBLE_DEVICES"] = opt.gpu
-testset = CelebA('/content/list_eval_partition.txt', '/content/list_attr_celeba.txt', '2',
+testset = CelebA('/content/list_eval_partition.csv', '/content/list_attr_celeba.csv', '2',
                   '/content/img_align_celeba/img_align_celeba/', transform_test)
 testloader = torch.utils.data.DataLoader(testset, batch_size=opt.batchSize, shuffle=False, num_workers=opt.workers)
 
@@ -27,9 +28,9 @@ if not os.path.exists(opt.model):
     print('model doesnt exits')
     exit(1)
 
-resnet=resnet50(pretrained=True)
+resnet=models.resnet50(pretrained=True)
 resnet.fc=nn.Linear(2048,40)
-resnet.load_state_dict(torch.load('ckp/model_naive.pth'))
+resnet.load_state_dict(torch.load('model_naive.pth'))
 resnet.cuda()
 
 resnet.eval()
