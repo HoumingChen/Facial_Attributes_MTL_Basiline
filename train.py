@@ -47,7 +47,7 @@ valloader = torch.utils.data.DataLoader(valset, batch_size=opt.batchSize, shuffl
 model=models.resnet50(pretrained=True)
 model.fc=nn.Linear(2048,40)
 model.cuda()
-criterion = nn.BCEWithLogitsLoss(reduce=True)
+criterion = nn.MSE(reduce=True)
 optimizer = optim.Adam(model.parameters(), lr=opt.lr)
 scheduler = StepLR(optimizer, step_size=2, gamma=0.5)
 
