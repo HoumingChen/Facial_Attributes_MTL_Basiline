@@ -24,8 +24,8 @@ transform_val = transforms.Compose([
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--workers', type=int, default=2)
-parser.add_argument('--batchSize', type=int, default=128)
-parser.add_argument('--nepoch', type=int, default=1)
+parser.add_argument('--batchSize', type=int, default=32)
+parser.add_argument('--nepoch', type=int, default=10)
 parser.add_argument('--lr', type=float, default=2e-6)
 parser.add_argument('--gpu', type=str, default='7', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
 opt = parser.parse_args()
