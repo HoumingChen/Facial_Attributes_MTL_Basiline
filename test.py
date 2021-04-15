@@ -21,7 +21,7 @@ print(opt)
 
 os.environ["CUDA_VISIBLE_DEVICES"] = opt.gpu
 testset = CelebA('/content/list_eval_partition.txt', '/content/list_attr_celeba.txt', '2',
-                  '/content/img_align_celeba/', transform_test)
+                  '/content/img_align_celeba/img_align_celeba/', transform_test)
 testloader = torch.utils.data.DataLoader(testset, batch_size=opt.batchSize, shuffle=False, num_workers=opt.workers)
 
 if not os.path.exists(opt.model):
