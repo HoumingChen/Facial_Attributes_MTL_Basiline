@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
 import torchvision.models as models
-from dataset.CelebA import CelebA
+from CelebA import CelebA
 import os
 from torch.autograd import Variable
 import argparse
